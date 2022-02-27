@@ -1,0 +1,501 @@
+---
+title: "Results"
+author: "Lucija Batinovic"
+date: "10/8/2021"
+output: "html_document"
+header-includes:
+   - \usepackage{caption}
+   - \captionsetup[table]{textfont={it}, labelfont={bf}, singlelinecheck=false, labelsep=newline}
+   - \usepackage{tabu}
+        \makeatletter
+          \def\tabuendlongtrial{
+        \LT@echunk  \global\setbox\LT@gbox \hbox{\unhbox\LT@gbox}\kern\wd\LT@gbox
+                \LT@get@widths
+          }
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#library(xfun)
+library(knitr)
+#library(kableExtra)
+library(papaja)
+library(metafor)
+library(here)
+library(tidyverse)
+
+sessionInfo()
+rmarkdown::pandoc_available()
+
+source(here("Analyses", "extraction_source.R"))
+```
+
+# Results
+
+```{r calculate_effects, message=FALSE}
+
+# Calculate the effects for the matched within subjects. This is based on 
+# the marginal table and uses log odds ratios.
+effects_fifty_ws <- escalc("MPOR",
+                           both, fifty_yes,
+                           control_yes, neither,
+                           data = ws_cs)
+
+effects_forty_ws <- escalc("MPOR",
+                           both, forty_yes,
+                           control_yes, neither,
+                           data = ws_cs)
+
+
+# Calculate the effects for the bs studies only
+
+effects_forty_bs <- escalc("OR", 
+                           forty_yes, control_yes,
+                           forty_no, control_no,
+                           data = bs_cs)
+
+effects_fifty_bs <- escalc("OR", 
+                           fifty_yes, control_yes,
+                           fifty_no, control_no,
+                           data = bs_cs)
+
+effects_sixty_bs <- escalc("OR", 
+                           sixty_yes, control_yes,
+                           sixty_no, control_no,
+                           data = bs_cs)
+
+effects_above_sixtyfive_bs <- escalc("OR", 
+                           above_sixtyfive_yes, control_yes,
+                           above_sixtyfive_no, control_no,
+                           data = bs_cs)
+
+
+# effect sizes for the scenario based studies (Oesch, 2021)
+# calculating standardized mean difference (Hedges, 1981)
+
+effect_forty_se <- escalc("SMD", m1i = mean_like_control, sd1i = sd_like_control, n1i = n_like_control,
+                                m2i = mean_like_forty, sd2i = sd_like_forty, n2i = n_like_forty,
+                          data = oesch)
+
+effect_fifty_se <- escalc("SMD", m1i = mean_like_control, sd1i = sd_like_control, n1i = n_like_control,
+                                m2i = mean_like_fifty, sd2i = sd_like_fifty, n2i = n_like_fifty,
+                          data = oesch)
+```
+
+
+```{r models, message=FALSE}
+
+### analyses conducted with Dersimonian and Laird tau estimator as a sensitivity check
+
+# #Analysis for ws
+# 
+# (random_fifty_ws <- rma(yi, vi, data=effects_fifty_ws, method="DL")) #zval = 7.68
+# (random_forty_ws <- rma(yi, vi, data=effects_forty_ws, method="DL")) #zval = 6.08
+# 
+# 
+# #Analysis for bs
+# 
+# (random_forty_bs <- rma(yi, vi, data=effects_forty_bs, method="DL")) #zval=2.60
+# (random_fifty_bs <- rma(yi, vi, data=effects_fifty_bs, method="DL")) #zval=7.88
+# (random_sixty_bs <- rma(yi, vi, data=effects_sixty_bs, method="DL")) #zval=5.98
+# (random_above_sixtyfive_bs <- rma(yi, vi, data=effects_above_sixtyfive_bs, method="DL")) #zval=4.51
+
+
+```
+
+
+*Meta-analysis for over-65-year-old applicants*
+
+```{r}
+
+(random_above_sixtyfive_bs <- rma(yi, vi, data=effects_above_sixtyfive_bs, method="REML")) #zval=2.55
+(random_above_sixtyfive_bs_exp <- predict(random_above_sixtyfive_bs, transf=exp, digits=2))
+
+```
+
+The meta-analytic findings for 65+-year olds for between-subjects designs. 
+The overall effect was OR = `r  random_above_sixtyfive_bs_exp$pred ` (95 % CI [ `r random_above_sixtyfive_bs_exp$ci.lb`, `r random_above_sixtyfive_bs_exp$ci.ub` ], 95% PI [ `r random_above_sixtyfive_bs_exp$pi.lb`, `r random_above_sixtyfive_bs_exp$pi.ub` ],  z = `r random_above_sixtyfive_bs$zval `, p = `r random_above_sixtyfive_bs$pval`).
+
+*Meta-analysis for 60-year-old applicants*
+
+
+```{r}
+
+(random_sixty_bs <- rma(yi, vi, data=effects_sixty_bs, method="REML")) #zval=5.99
+(random_sixty_bs_exp <- predict(random_sixty_bs, transf=exp, digits=2))
+
+```
+
+The meta-analytic findings for 60-year olds for between-subjects designs. 
+The overall effect was OR = `r  random_sixty_bs_exp$pred `, 95 % CI [ `r random_sixty_bs_exp$ci.lb`, `r random_sixty_bs_exp$ci.ub` ], 95% PI [ `r random_sixty_bs_exp$pi.lb`, `r random_sixty_bs_exp$pi.ub` ], z = `r random_sixty_bs$zval `, p = `r random_sixty_bs$pval`.
+
+*Meta-analyses for 50-year-old applicants*
+
+```{r}
+
+(random_fifty_ws <- rma(yi, vi, data=effects_fifty_ws, method="REML")) #zval= 7.68 ##analysis for within-subject design for 50-year-olds
+(random_fifty_ws_exp <- predict(random_fifty_ws, transf=exp, digits=2)) ##exponentiating log odds
+
+(random_fifty_bs <- rma(yi, vi, data=effects_fifty_bs, method="REML")) #zval=7.88 ##analysis for between-subject design for 50-year-olds
+(random_fifty_bs_exp <- predict(random_fifty_bs, transf=exp, digits=2))
+
+```
+
+The meta-analytic findings for 50-year-olds for within-subjects designs. 
+The overall effect was OR = `r  random_fifty_ws_exp$pred `, 95 % CI [ `r random_fifty_ws_exp$ci.lb`, `r random_fifty_ws_exp$ci.ub` ], 95% PI [ `r random_fifty_ws_exp$pi.lb`, `r random_fifty_ws_exp$pi.ub` ], z = `r random_fifty_ws$zval `, p = `r random_fifty_ws$pval`.
+
+The meta-analytic findings for 50-year-olds for between-subjects designs. 
+The overall effect was OR = `r  random_fifty_bs_exp$pred `, 95 % CI [ `r random_fifty_bs_exp$ci.lb`, `r random_fifty_bs_exp$ci.ub` ], 95% PI [ `r random_fifty_bs_exp$pi.lb`, `r random_fifty_bs_exp$pi.ub` ], z = `r random_fifty_bs$zval `, p = `r random_fifty_bs$pval`.
+
+*Meta-analyses for 40-year-old applicants*
+
+```{r}
+
+(random_forty_ws <- rma(yi, vi, data=effects_forty_ws, method="REML")) #zval = 6.06
+ ##analysis for within-subject design for 40-year-olds
+(random_forty_ws_exp <- predict(random_forty_ws, transf=exp, digits=2))
+##exponentiating log odds
+
+(random_forty_bs <- rma(yi, vi, data=effects_forty_bs, method="REML")) #zval=2.60##analysis for between-subject design for 40-year-olds
+(random_forty_bs_exp <- predict(random_forty_bs, transf=exp, digits=2))
+
+```
+
+The meta-analytic findings for 40-year-olds for within-subjects designs. 
+The overall effect was OR = `r  random_forty_ws_exp$pred `, 95 % CI [ `r random_forty_ws_exp$ci.lb`, `r random_forty_ws_exp$ci.ub` ], 95% PI [ `r random_forty_ws_exp$pi.lb`, `r random_forty_ws_exp$pi.ub` ], z = `r random_forty_ws$zval `, p = `r random_forty_ws$pval`.
+
+The meta-analytic findings for 40-year-olds for between-subjects designs. 
+The overall effect was OR = `r  random_forty_bs_exp$pred `, 95 % CI [ `r random_forty_bs_exp$ci.lb`, `r random_forty_bs_exp$ci.ub` ], 95% PI [ `r random_forty_bs_exp$pi.lb`, `r random_forty_bs_exp$pi.ub` ], z = `r random_forty_bs$zval `, p = `r random_forty_bs$pval`.
+
+*Effect sizes for the scenario experiment*
+
+```{r}
+
+summary.escalc(effect_fifty_se)
+summary.escalc(effect_forty_se)
+
+```
+
+The meta-analytic findings for 40-year-olds for scenario experiment. 
+The overall effect was Hedge's g = `r  effect_forty_se$yi `, 95 % CI [ `r effect_forty_se$ci.lb`, `r effect_forty_se$ci.ub` ].
+
+The meta-analytic findings for 50-year-olds for scenario experiment. 
+The overall effect was Hedge's g = `r  effect_fifty_se$pred `, 95 % CI [ `r effect_fifty_se$ci.lb`, `r effect_fifty_se$ci.ub` ].
+
+*Risk of bias across studies*
+
+Here we present the results from p-checker and the funnel plots.
+
+Copy the text from "p-curve.rtf" file into p-checker shiny app: https://shinyapps.org/apps/p-checker/
+
+We included studies we could extract focal tests from and that were reported as significant in the papers.
+
+```{r p-curve}
+include_graphics(here("Input", "p-curve-age.png"))
+```
+
+
+```{r funnel}
+
+#standard funnel
+#funnel(random_sixty_bs)
+#enhanced funnel to check for publication bias
+funnel(random_above_sixtyfive_bs, level=c(90, 95, 99), 
+       shade=c("white", "gray", "darkgray"), refline=0)
+funnel(random_sixty_bs, level=c(90, 95, 99), 
+       shade=c("white", "gray", "darkgray"), refline=0)
+funnel(random_fifty_bs, level=c(90, 95, 99), 
+       shade=c("white", "gray", "darkgray"), refline=0)
+funnel(random_forty_bs, level=c(90, 95, 99), 
+       shade=c("white", "gray", "darkgray"), refline=0)
+
+
+```
+
+
+```{r forest_plots}
+
+#Note that transf = exp means that it's in OR and not in the log odds ratios. 
+forest(random_above_sixtyfive_bs, transf=exp, refline=1, 
+       slab = effects_above_sixtyfive_bs$id, header = "Authors")
+forest(random_sixty_bs, transf=exp, refline=1, slab = effects_sixty_bs$id, 
+       header = "Authors", mlab = "")
+forest(random_fifty_bs, transf=exp, refline=1, slab = effects_fifty_bs$id, 
+       header = "Authors")
+forest(random_forty_bs, transf=exp, refline=1, slab = effects_forty_bs$id, 
+       header = "Authors")
+forest(random_fifty_ws, transf=exp, refline=1, slab = effects_fifty_ws$id, 
+       header = "Authors")
+forest(random_forty_ws, transf=exp, refline=1, slab = effects_forty_ws$id, 
+       header = "Authors")
+
+
+
+```
+
+
+
+```{r combined forest plot for between-subject studies}
+
+#create a dataset with counts for the forest plot
+all_effects <- matrix(c("40-49",	"Carlsson & Eriksson (2019)",	142,	9,	1477,	118, "Moderate"
+                        ,"40-49",	"Farber et al. (2019)",	1321,	139,	1246,	122, "Moderate"
+                        ,"40-49",	"Neumark et al. (2016)",	10896,	2348,	3460,	655, "High"
+                        ,"50-59",	"Carlsson & Eriksson (2019)",	142,	9,	1621,	57, "Moderate"
+                        ,"50-59",	"Farber et al. (2019)",	1321,	139,	1324,	115, "Moderate"
+                        ,"50-59",	"Neumark et al. (2016)",	10896,	2348,	7310,	1170, "High"
+                        ,"60-65",	"Carlsson & Eriksson (2019)",	142,	9,	979,	17, "Moderate"
+                        ,"60-65",	"Farber et al. (2019)",	1321,	139,	1244,	101, "Moderate"
+                        ,"60-65",	"Neumark et al. (2016)",	10896,	2348,	8565,	1038, "High"
+                        ,"60-65",	"Neumark et al. (2019)",	5288,	1789,	3768,	827, "Moderate"
+                        ,"66+",	"Carlsson & Eriksson (2019)",	142,	9,	801,	10, "Moderate"
+                        ,"66+",	"Neumark et al. (2016)",	10896,	2348,	3866,	561, "High"
+                        ,"66+",	"Neumark et al. (2019)",	5288,	1789,	2102,	398, "Moderate"),
+                      nrow = 13, ncol = 7, byrow = TRUE) %>% as.data.frame %>% 
+  mutate_at(c(3:6), as.numeric)
+names(all_effects) <- c("age_group",	"Author_year","control_no",	"control_yes",	"older_no",	"older_yes", "rob")
+
+
+### decrease margins
+par(mar=c(4,2,1,2))
+
+#combine all datasets to get yi and vi in one df
+
+all_effects_OR <- escalc("OR", 
+                     older_yes,control_yes,
+                     older_no, control_no,
+                    data = all_effects)
+all_rma <- rma(yi, vi, data=all_effects_OR, method="REML",
+               slab = Author_year
+                 #paste(Author_year #, age_group, sep = " - ")
+                 )
+#set up saving the forest plot to pdf
+pdf("bs_plot.pdf")
+# create a forest plot and set coordinates
+(bs_plot <- forest(all_rma, xlim=c(-16, 8), at=log(c(0.25, 1, 4)), atransf=exp,
+       ilab=cbind(all_effects_OR$control_no, all_effects_OR$control_yes,
+                  all_effects_OR$older_no, all_effects_OR$older_yes, all_effects_OR$rob),
+       colout = "coral3",
+       #textpos= c(-16, 10),
+       #refline = 2,
+       #ylim = plot height (number of rows)
+       #ilab.xpos = positioning of frequencies
+       ilab.xpos=c(-7.6,-6,-4,-2.5,3), cex=0.7, 
+       ylim=c(-1, 27),
+       #order = "obs",
+       #in which rows you put data
+       rows=c(24:22,18:16,12:9,5:3),
+       addfit=FALSE,
+       xlab="Odds Ratio" #, mlab="REML of between-subject designs", psize=1
+       ))
+
+### set font expansion factor (as in forest() above) and use bold italic
+### font and save original settings in object 'op'
+op <- par(cex=.75, font=4)
+
+# ### add text for the subgroups
+# text(-16, 
+#      #c(24,16,5,3), 
+#      pos=4, 
+#      c("Age category 40-49",
+#        "Age category 50-59",
+#       "Age category 60-65",
+#       "Age category 66+"))
+
+### switch to bold font and stop text clipping if falls out of plot scope
+par(font=2, xpd=NA)
+
+### add headings to the plot
+text(c(-8.1,-6,-3.75,-1.7), 27, c("Not invited", "Invited", "Not invited", "Invited"))
+text(c(-6.8,-3),        26,                c("Control",                "Older"))
+text(-16, 26, "Author(s) and Year",  pos=4)
+text(8, 27, "Odds Ratio", pos=2)
+text(8, 26, "[95% CI]", pos=2)
+text(4.5, 27, "Study Bias", pos=2)
+text(4.5, 26, "Assessment", pos=2)
+
+### set par back to the original settings
+par(op)
+
+### add summary polygons for the age groups
+addpoly(random_forty_bs, row=20, cex=0.75, atransf=exp, mlab="RE Model for Age 40-49")
+addpoly(random_fifty_bs, row= 14, cex=0.75, atransf=exp, mlab="RE Model for Age 50-59")
+addpoly(random_sixty_bs, row= 7, cex=0.75, atransf=exp, mlab="RE Model for Age 60-65")
+addpoly(random_above_sixtyfive_bs, row= 1, cex=0.75, atransf=exp, mlab="RE Model for Age 66+")
+
+
+#ends the plot saving process
+dev.off
+
+```
+
+
+```{r combined forest plot for within-subject studies}
+all_ws_cs <- matrix(c("40-49", 	"Ahmed et al. (2012)", 34, 5, 8, 419, "Moderate",
+                      "40-49", "Capéau et al. (2012)", 31, 5, 26, 129, "Low",
+                      "50-59", "Capéau et al. (2012)", 34, 7, 17, 135, "Low",
+                      "50-59", "Jansons & Zukov (2012)", 19, 5, 7, 215, "Low"),
+                    nrow = 4, ncol = 7, byrow = TRUE) %>% as.data.frame() %>% 
+                    mutate_at(c(3:6), as.numeric)
+names(all_ws_cs) <- c("age_group", "author_year", "control_only", "older_only", "both", "neither", "rob")
+
+effects_ws_cs <- escalc("MPOR",
+                  both, older_only,
+                  control_only, neither,
+                  data = all_ws_cs)
+ws_rma <- rma(yi, vi, data=effects_ws_cs, method="REML",
+              slab = author_year
+                #paste(author_year, age_group, sep = " - ")
+              )
+pdf("ws_plot.pdf")
+
+ws_plot <- forest(ws_rma, xlim=c(-16, 9), at=log(c(.25, 1, 4)), atransf=exp,
+       ilab=cbind(effects_ws_cs$control_only, effects_ws_cs$older_only,
+                  effects_ws_cs$both, effects_ws_cs$neither, all_ws_cs$rob),
+       ilab.xpos=c(-8,-6.5,-3.5,-2.5,3.3), cex=0.75, ylim=c(2, 10),
+       colout = "blue3",
+       #order = "obs",
+       rows=c(7,6.5,4,3.5),
+       addfit=FALSE,
+       xlab="Odds Ratio" #, mlab="REML of between-subject designs", psize=1
+       )
+
+op <- par(cex=.75, font=4)
+
+### add text for the subgroups
+# text(-16, 
+#      c(6.5,4.5), 
+#      pos=4, 
+#      c("Age category 40-49",
+#        "Age category 50-59"))
+
+par(font=2)
+
+### add column headings to the plot
+text(-6,               9, "Callbacks")
+text(c(-9.2,-6.5,-4,-2.5), 8.5, c("Control only", "Older only", "Both", "Neither"))
+text(-16,                8.5, "Author(s) and Year",  pos=4)
+#text(-16,                  7, "- Age group",         pos=4)
+text(9,                  8.7, "Odds Ratio", pos=2)
+text(9,                  8.5, "[95% CI]", pos=2)
+text(5,                  8.7, "Study Bias", pos=2)
+text(5,                   8.5, "Assessment", pos=2)
+
+### set par back to the original settings
+par(op)
+
+addpoly(random_forty_ws, row=5.5, cex=.75, atransf=exp, mlab="RE Model for Age 40")
+addpoly(random_fifty_ws, row=2.5, cex=.75, atransf=exp, mlab="RE Model for Age 50")
+
+dev.off()
+
+```
+
+
+*Sensitivity analyses*
+
+Here we first do a leave-one-out analysis to see if the finding is robust to the removal of one study
+
+```{r loo}
+
+loo1 <- as.data.frame(leave1out(random_above_sixtyfive_bs)) %>% add_column(age="Above 65",study=c("Carlsson & Eriksson (2019)", "Neumark et al. (2016)", "Neumark et al. (2019)"), .before=TRUE)
+loo2 <- as.data.frame(leave1out(random_sixty_bs)) %>% add_column(age="60-65",study = c("Carlsson & Eriksson (2019)", "Farber et al. (2019)", "Neumark et al. (2016)", "Neumark et al. (2019)"), .before=TRUE)
+loo3 <- as.data.frame(leave1out(random_fifty_bs)) %>% add_column(age="50-59",study = c("Carlsson & Eriksson (2019)", "Farber et al. (2019)", "Neumark et al. (2016)"), .before=TRUE)
+loo4 <- as.data.frame(leave1out(random_forty_bs)) %>% add_column(age="40-49",study = c("Carlsson & Eriksson (2019)", "Farber et al. (2019)", "Neumark et al. (2016)"), .before=TRUE)
+
+leaveoneout <- bind_rows(loo1, loo2, loo3, loo4)
+
+```
+
+
+## Results of individual studies
+
+\indent We present results of syntheses further in text. Meta-analyses which included more than one study are accompanied with forest plots in the text. Other figures and code are available in the RMarkdown file in the appended materials. All meta-analyses were conducted using the random-effects model with Restricted Maximum Likelihood (REML) tau estimator, as it's the default in the metafor package, but for a robustness check, we conducted the meta-analysis with the commonly used Dersimonian and Laird (1986) tau estimator as well, available in the materials on OSF (link). In general, we found no discrepancies, apart from the meta-analysis of studies on age above sixty-five, where REML method estimated a higher tau value. All summary statistics were calculated using default methods in the metafor package. 
+
+```{r between-subject forest plots, echo=FALSE}
+
+include_graphics(here("Analyses", "bs_plot.pdf"))
+
+
+```
+
+
+```{r within-subject forest plots, echo=FALSE}
+
+include_graphics(here("Analyses", "ws_plot.pdf"))
+
+```
+
+
+## Results of syntheses
+
+As mentioned prior, this review intended to conduct four different types of meta-analyses, containing one of four combinations from either correspondence or vignette studies and either in-between or within-subjects design. Due to the availability of our empirical material, we had to omit meta-analyses on scenario-based experiments. The results of the remaining meta-analyses can be seen below. 
+
+\indent Age category - Forty \par
+\indent Our first meta-analysis encompassed all within-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis (k=2), the three included studies revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with OR being `r  random_forty_ws_exp$pred ` (95 % CI [ `r random_forty_ws_exp$ci.lb`, `r random_forty_ws_exp$ci.ub` ], 95% PI [ `r random_forty_ws_exp$pi.lb`, `r random_forty_ws_exp$pi.ub` ], z = `r random_forty_ws$zval `, p = `r random_forty_ws$pval`), which means that on average the older applicant had 66% less chance of being hired compared to the control.  Total variance was low (mostly due to a low number of included studies; k=2) tau^2 = `r  random_forty_ws$tau2 `, and the heterogeneity was I^2 = `r  random_forty_ws$I2 `%. 
+
+\indent Our second meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis, the three studies included revealed a significant effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with odds ratio of `r  random_forty_bs_exp$pred ` (95 % CI [ `r random_forty_bs_exp$ci.lb`, `r random_forty_bs_exp$ci.ub` ], 95% PI [ `r random_forty_bs_exp$pi.lb`, `r random_forty_bs_exp$pi.ub` ], z = `r random_forty_bs$zval `, p = `r random_forty_bs$pval`), meaning they had 11% chance less of being hired compared to younger applicants. Tau^2 and I^2 were zero, however heterogeneity of studies is difficult assess with such a small number of included studies (k=3), so this does not imply homogeneity.  
+
+\indent Age category - Fifty 
+\indent Our third meta-analysis was set to include all within-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis, the  study on the matter of age discrimination revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants The overall effect was OR = `r  random_fifty_ws_exp$pred ` (95 % CI [ `r random_fifty_ws_exp$ci.lb`, `r random_fifty_ws_exp$ci.ub` ], 95% PI [ `r random_fifty_ws_exp$pi.lb`, `r random_fifty_ws_exp$pi.ub` ], z = `r random_fifty_ws$zval `, p = `r random_fifty_ws$pval`), with 61% lower chance of being hired compared to control. Once again, tau^2 and I^2 values (0; 0% resp.) for such a small sample of studies (k=3) do not provide meaningful assessment of heterogeneity.
+
+\indent Our fourth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis we found that on average older applicants had a 25% lower chance of being invited to an interview/hired than the younger applicant (OR = `r  random_fifty_bs_exp$pred `, 95 % CI [ `r random_fifty_bs_exp$ci.lb`, `r random_fifty_bs_exp$ci.ub` ], 95% PI [ `r random_fifty_bs_exp$pi.lb`, `r random_fifty_bs_exp$pi.ub` ], z = `r random_fifty_bs$zval `, p = `r random_fifty_bs$pval`). 
+
+\indent Age category - Sixty
+\indent Our fifth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 60 to 65 year old applicants. Via a random-effects meta-analysis, we found on average that older applicants have a 39% lower chance of getting hired campared to younger applicants (OR = `r  random_sixty_bs_exp$pred `, 95 % CI [ `r random_sixty_bs_exp$ci.lb`, `r random_sixty_bs_exp$ci.ub` ], 95% PI [ `r random_sixty_bs_exp$pi.lb`, `r random_sixty_bs_exp$pi.ub` ], z = `r random_sixty_bs$zval `, p = `r random_sixty_bs$pval`). Total variance was low (tau^2 = `r  random_sixty_bs$tau2 `), with 75% of it being heterogeneity of true effects (I^2 = `r  random_sixty_bs$I2 `). 
+
+
+\indent Age category - Over Sixtyfive
+\indent The final meta-analysis set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and applicants over 65 years of age. Via a random-effects meta-analysis, we found that on average, older applicants have a 50% lower chance of being hired compared to control (OR = `r  random_above_sixtyfive_bs_exp$pred `, 95 % CI [ `r random_above_sixtyfive_bs_exp$ci.lb`, `r random_above_sixtyfive_bs_exp$ci.ub` ], 95% PI [ `r random_above_sixtyfive_bs_exp$pi.lb`, `r random_above_sixtyfive_bs_exp$pi.ub` ], z = `r random_above_sixtyfive_bs$zval `, p = `r random_above_sixtyfive_bs$pval`). Total variance was relatively low (tau^2 = `r  random_above_sixtyfive_bs$tau2 `), with effect heterogeneity accounting for mostly all of that variance (I^2 = `r  random_above_sixtyfive_bs$I2 `). 
+
+
+Finally, for the one scenario experiment study we obtained data from (Oesch, 2012) we calculated a Hedge's g effect size of g = `r  effect_forty_se$yi `, 95 % CI [ `r summary.escalc(effect_forty_se)$ci.lb`, `r summary.escalc(effect_forty_se)$ci.ub` ] for 40-year-olds, and g = `r  effect_fifty_se$yi `, 95 % CI [ `r summary.escalc(effect_fifty_se)$ci.lb`, `r summary.escalc(effect_fifty_se)$ci.ub` ] for 50-year-olds. 
+
+```{r loo, echo=FALSE}
+
+apa_table(leaveoneout
+          , escape = TRUE
+          #, caption = ""
+          #, align = c("p{3cm}", "p{1.5cm}", "p{3cm}", "p{1.5cm}", "p{1.5cm}", "p{2cm}", "p{4cm}", "p{2cm}", "p{3cm}")
+          #, align = paste0("m{", 1/(ncol(characteristics) + 1), "\\textwidth}")
+          , font_size = "footnotesize"
+          , landscape = TRUE
+          , longtable = FALSE)
+
+```
+
+We conducted a leave-one-out sensitivity analysis and found that leaving out the Carlsson & Eriksson (2019) study substantially increased average effects of age discrimination (Table 4). This can be explained by the large confidence interval in that study (Figure x) which means a higher uncertainty of the true average effect. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

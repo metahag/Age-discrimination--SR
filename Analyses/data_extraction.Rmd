@@ -1,0 +1,230 @@
+---
+title: "Extraction of effects and focal tests"
+author: "Lucija Batinovic"
+date: "2021-11-28"
+output: "pdf_document"
+---
+
+```{r setup, include=FALSE}
+
+library(haven)
+library(here)
+library(tidyverse)
+
+options(tibble.width = Inf)
+source(here("Analyses", "extraction_source.R"))
+
+```
+
+
+***Within-subject correspondence studies***
+
+## Ahmed et al. (2012)
+
+Data for for matched-pairs effect size calculations was extracted from Table 1, p.405
+
+Focal test:(p.405 in text): t(465) = 4.750; p < 0.001
+
+R-Index = 0.9937
+
+```{r echo=FALSE}
+
+ahmed_12
+
+```
+
+
+## Jansons & Zukov (2012)
+
+Table 4; p.22 (NOTE:contingency table 3 in appendix shows 26/503 for older applicants)
+Data for for matched-pairs effect size calculations was extracted from Table 4, p.22
+
+Focal tests: (Table 8, p.41): chi2(1)=11.118, p<.001  
+
+R-Index = 0.8307
+
+```{r echo=FALSE}
+
+jansons_12
+
+```
+
+
+
+***Between-subject correspondence studies***
+
+## Carlsson & Eriksson (2019) 
+
+Focal test: (Table 2, p. 177) calculated z-value from coefficient and standard error = `r (-0.0049) / 0.0004`
+Data is extracted from the raw dataset which was provided by the authors. We share the raw frequencies from that dataset and code used to calculate it, but cannot provide the raw dataset itself.
+
+R-Index = 1
+
+```{r echo=FALSE}
+
+carlsson_eriksson19 
+
+```
+
+
+## Farber et al. (2019) 
+
+Focal test (Table 3, p.335): Pearson chi-square calculated based on any callback (chi2(5)=14.1; p =.015) as their focal test for age-based-only discrimination. 
+
+used callback rates are taken from the interview invitation column
+numbers reported are not reported as percentages
+
+R-Index = 0.3636
+
+```{r echo=FALSE}
+
+farber_19 
+
+```
+
+## Neumark et al. (2016) 
+
+Focal test (p.305): callback rates for older applicants (14.7%) were lower than for younger (20.9%), crit. = .10, p = .00
+
+R-Index = 1
+
+
+```{r echo=FALSE}
+
+neumark16 
+
+```
+
+
+## Neumark et al. (2019)
+
+Focal tests: (Table 4 - p.392): (males(model 1); old 64-66) z-value = -`r 0.064 / 0.006`,
+crit = 0.10 (p < .05)
+
+R-Index = 1
+
+```{r include=FALSE}
+#=.064 was a negative value, but R for some reason does not run it when inside r code chunk so it's outside of r chunk
+```
+
+
+
+```{r echo=FALSE}
+
+neumark19_state
+
+```
+
+
+## Challe et al. (2015)
+
+This data could not be extracted form summaries in the article and we couldn't get data from the authors.
+
+Experiment 1
+
+Focal test (Table 4, p.9): p = 0.001 (first p-value presented; pairwise comparison for 56-long-distance vs. 29 year-olds)
+
+Experiment 2
+
+Focal test (Table 7 - p.12): IT: 50vs30 - p = .000 (Pairwise comparisons of success rates in job offers between age groups)
+
+Experiment 3
+
+Focal test (Table 10 - p.15): Men: 50vs30 - p = .001 (Pairwise comparisons of success rates)
+
+## Capeau et al. (2012) 
+
+We extracted data from the dataset shared by the author. We provided the frequencies we calculated from that dataset and the code to do it, but we cannot share the raw dataset provided by the author.
+
+Focal test (Table 1, p.14): probit model for age 47, probability to be selected - z score = - `r 0.2337 / 0.1346`, p<.001
+
+R-Index = 0.9999
+
+```{r}
+
+capeau12
+
+```
+
+
+***Within-subject scenario studies***
+
+## Montizaan & Fouarge (2019) 
+
+This data could not be extracted from summaries in the article and we couldn't get data from the authors.
+
+Focal tests: (Table 3, p. 38): z-value = -`r 0.065 / 0.011` 
+
+R-Index = 0.9999
+
+```{r include=FALSE}
+#=.065 was a negative value, but R for some reason does not run it when inside r code chunk so it's outside of r chunk
+```
+
+
+***Between-subject scenario studies***
+
+## Richardson (2013)
+
+This data could not be extracted form summaries in the article and we couldn't reach the authors.
+
+Focal tests: (Table 2, p.41): (age linear-hire; students) b = -.31, p < 0.05
+
+## Oesch (2020) 
+
+Focal tests: (Table 1, p.6): (40-year-old, model 1) z-value = `r 0.07 / 0.06`,
+crit = 0.10 (p < 0.1)
+
+Data was extracted from raw data provided by the author. Note that the author provided necessary code for analyses, but the actual data can be downloaded from: https://forsbase.unil.ch/project/study-public-overview/16840/1/
+
+Variables:
+age of applicants by categories (1=35;2=40;3=45;4=50;5=55)
+mean, sd and n (observations) of likelihood of each age getting hired
+
+R-Index = 0.6325
+
+
+```{r, echo=FALSE}
+
+oesch
+
+```
+
+
+
+***Meta-analysis dataframes***
+
+
+```{r WS-correspondence-combined-df, echo=FALSE}
+ws_cs 
+
+```
+
+```{r BS-correspondence-combined-df, echo=FALSE}
+
+bs_cs 
+
+```
+
+```{r Dataset including all study-designs (for debugging purposes), echo=FALSE}
+
+ma_cs_all 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
