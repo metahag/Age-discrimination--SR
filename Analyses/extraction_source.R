@@ -35,66 +35,72 @@ jansons_12 <- data.frame(id = "Jansons & Zukov (2012)",
 
 ## Capeau et al. (2012)
 
-capeau_raw <- readxl::read_xlsx(here("Input", "sample_resumes.xlsx"), 
+# capeau_raw <- readxl::read_xlsx(here("Input", "sample_resumes.xlsx"), 
                                 #first sheet containing full data info
                                 #skipping first row without proper variable names
-                                sheet = 1, range = "A2:M60")
+#                                sheet = 1, range = "A2:M60")
 
-capeau12 <- capeau_raw %>% #select(c(2,3,4,6,8,10)) %>% 
-          #choose relevant variables
-          select("ethnicity" = 'Origin/Type', age, 
-                 "older_yes" = 'type invited /other is not invited',
-                 "both" = '...6',
-                 "neither" ='...8',
-                 "control_yes" = 'type not invited / other invited') %>%  
-          group_by(age) %>% 
-          #add callbacks for each age group
-          summarise_at(c("older_yes", "both", "neither", "control_yes"), sum) %>% 
-          #filter out ages 23 and 35(this is 35 vs. 35, not control vs. older)
-          filter(age != 23 & age != 35) %>% 
-          #create separate column for forty and fifty year olds invited
-          mutate(forty_yes = if_else(age == 47, older_yes, 0),
-                 fifty_yes = if_else(age == 53, older_yes, 0)) %>% 
-          #remove age and older_yes columns and add id column
-          select(-c(age, older_yes)) %>% add_column(id = "Capéau et al. (2012)", .before = TRUE)
+#capeau12 <- capeau_raw %>% #select(c(2,3,4,6,8,10)) %>% 
+#        #choose relevant variables
+#        select("ethnicity" = 'Origin/Type', age, 
+#               "older_yes" = 'type invited /other is not invited',
+#               "both" = '...6',
+#               "neither" ='...8',
+#               "control_yes" = 'type not invited / other invited') %>%  
+#        group_by(age) %>% 
+#        #add callbacks for each age group
+#        summarise_at(c("older_yes", "both", "neither", "control_yes"), sum) %>% 
+#        #filter out ages 23 and 35(this is 35 vs. 35, not control vs. older)
+#        filter(age != 23 & age != 35) %>% 
+#        #create separate column for forty and fifty year olds invited
+#        mutate(forty_yes = if_else(age == 47, older_yes, 0),
+#               fifty_yes = if_else(age == 53, older_yes, 0)) %>% 
+#        #remove age and older_yes columns and add id column
+#        select(-c(age, older_yes)) %>% add_column(id = "Capéau et al. (2012)", .before = TRUE) %>%
+#        write.csv(here("Input", "capeau12.csv"))
+                    
+capeau12 <- read_csv(here("Input", "capeau12.csv"))
 
 ## Carlsson & Eriksson (2019) 
 
-differentiated_callbacks <- readxl::read_xls(here("Input", "Carlsson_Eriksson.xls")) 
+# differentiated_callbacks <- readxl::read_xls(here("Input", "Carlsson_Eriksson.xls")) 
 
-carlsson_eriksson19 <- differentiated_callbacks %>% 
-  #group_by(age, callback) %>% 
-  #group_by(age, interview) %>% 
-  group_by(age, callback, interview) %>% 
-  # count number of callbacks per group
-  summarise(call_n = n()) %>%
-  #ungroup for the rest of wrangling
-  ungroup() %>% 
-  #keep only control age and experimental age (36-39 was not our PICOS)
-  filter(age == 35 | age >= 40) %>% 
-  #create age categories, breaks start with one age prior to category
-  mutate(age_group = cut(age, breaks = c(34, 39, 49, 59, 65, 70),
-                         labels = c("control", "forty", "fifty", "sixty", "above_sixtyfive"), 
-                         #order them correctly
-                         ordered_result = TRUE)) %>%
-  #group again to summarize
-  group_by(age_group, callback, interview) %>% 
-  summarise_if(is.numeric, sum) %>% 
-  ungroup() %>% 
-  #add whether they were invited or not to the age category based on
-  #variable coding in the original dataset
-  mutate(age_group = case_when(
-    callback == 0 & interview == 0 ~ paste0(age_group,"_no"),
-    callback == 1 & interview == 0 ~ paste0(age_group,"_maybe"),
-    TRUE ~ paste0(age_group,"_yes"),
-  )) %>% 
-  #filter out maybe, keep only certain callbacks
-  filter(!grepl("_maybe", age_group)) %>%  
-  #only choose the age categories and number of callbacks
-  select(age_group, call_n) %>% 
-  #create a dataframe suitable for calculating effect sizes using escalc
-  pivot_wider(names_from = age_group, values_from = call_n) %>% 
-  add_column(id = c("Carlsson & Eriksson (2019)"), .before = TRUE) 
+#carlsson_eriksson19 <- differentiated_callbacks %>% 
+#  #group_by(age, callback) %>% 
+#  #group_by(age, interview) %>% 
+#  group_by(age, callback, interview) %>% 
+#  # count number of callbacks per group
+#  summarise(call_n = n()) %>%
+#  #ungroup for the rest of wrangling
+#  ungroup() %>% 
+#  #keep only control age and experimental age (36-39 was not our PICOS)
+#  filter(age == 35 | age >= 40) %>% 
+#  #create age categories, breaks start with one age prior to category
+#  mutate(age_group = cut(age, breaks = c(34, 39, 49, 59, 65, 70),
+#                         labels = c("control", "forty", "fifty", "sixty", "above_sixtyfive"), 
+#                         #order them correctly
+#                         ordered_result = TRUE)) %>%
+#  #group again to summarize
+#  group_by(age_group, callback, interview) %>% 
+#  summarise_if(is.numeric, sum) %>% 
+#  ungroup() %>% 
+#  #add whether they were invited or not to the age category based on
+#  #variable coding in the original dataset
+#  mutate(age_group = case_when(
+#    callback == 0 & interview == 0 ~ paste0(age_group,"_no"),
+#    callback == 1 & interview == 0 ~ paste0(age_group,"_maybe"),
+#    TRUE ~ paste0(age_group,"_yes"),
+#  )) %>% 
+#  #filter out maybe, keep only certain callbacks
+#  filter(!grepl("_maybe", age_group)) %>%  
+#  #only choose the age categories and number of callbacks
+#  select(age_group, call_n) %>% 
+#  #create a dataframe suitable for calculating effect sizes using escalc
+#  pivot_wider(names_from = age_group, values_from = call_n) %>% 
+#  add_column(id = c("Carlsson & Eriksson (2019)"), .before = TRUE) %>%
+#  write.csv(here("Input", "carlsson_eriksson19.csv"))
+
+carlsson_eriksson19 <- read_csv(here("Input", "carlsson_eriksson19.csv"))
 
 
 ## Farber et al. (2019) 
@@ -191,33 +197,36 @@ neumark19_state <- neumark19_raw %>%
 
 ##### Oesch (2020) #####
 
-oesch_raw <- read_dta(here("Input", "1141_LIVES-JOBVUL_Data_STATA_v1.0.0.dta"))
+# oesch_raw <- read_dta(here("Input", "1141_LIVES-JOBVUL_Data_STATA_v1.0.0.dta"))
 
 # v_age = vignette age applicant (1=35;2=40;3=45;4=50;5=55)
 # rate = likelihood of being hired 1-10
-oesch <- oesch_raw %>% 
-  select(v_age, rate) %>% 
-  # -1 is their coding for NAs, so mutate to NA
-  mutate(rate = na_if(rate, '-1'),
-         v_age = na_if(v_age, '-1')
-  ) %>%
-  # filter out missing data
-  filter(!is.na(v_age), !is.na('rate')) %>% 
-  mutate(v_age = case_when(
-    # age 35 (1)
-    v_age == 1 ~ "control",
-    # age 40 (2) and 45 (3)
-    v_age == 2 | v_age == 3 ~ "forty",
-    TRUE ~ "fifty") 
-  ) %>% 
-  group_by(v_age) %>%
-  # summarise
-  summarise(#median_likelihood = median(rate, na.rm = TRUE),
-            mean_like = mean(rate, na.rm = TRUE),
-            sd_like = sd(rate, na.rm = TRUE),
-            n_like = n()) %>% 
-  # change data table format to calculate effect sizes
-  pivot_wider(names_from = v_age, values_from = c(mean_like, sd_like, n_like))
+#oesch <- oesch_raw %>% 
+#  select(v_age, rate) %>% 
+#  # -1 is their coding for NAs, so mutate to NA
+#  mutate(rate = na_if(rate, '-1'),
+#         v_age = na_if(v_age, '-1')
+#  ) %>%
+#  # filter out missing data
+#  filter(!is.na(v_age), !is.na('rate')) %>% 
+#  mutate(v_age = case_when(
+#    # age 35 (1)
+#    v_age == 1 ~ "control",
+#    # age 40 (2) and 45 (3)
+#    v_age == 2 | v_age == 3 ~ "forty",
+#    TRUE ~ "fifty") 
+#  ) %>% 
+#  group_by(v_age) %>%
+#  # summarise
+#  summarise(#median_likelihood = median(rate, na.rm = TRUE),
+#            mean_like = mean(rate, na.rm = TRUE),
+#            sd_like = sd(rate, na.rm = TRUE),
+#            n_like = n()) %>% 
+#  # change data table format to calculate effect sizes
+#  pivot_wider(names_from = v_age, values_from = c(mean_like, sd_like, n_like)) %>%
+#  write.csv(here("Input", "oesch.csv"))
+
+oesch <- read_csv(here("Input", "oesch.csv"))
 
 
 
