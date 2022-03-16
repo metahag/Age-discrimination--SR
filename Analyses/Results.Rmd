@@ -451,7 +451,7 @@ As mentioned prior, this review intended to conduct four different types of meta
 
 Finally, for the one scenario experiment study we obtained data from (Oesch, 2012) we calculated a Hedge's g effect size of g = `r  effect_forty_se$yi `, 95 % CI [ `r summary.escalc(effect_forty_se)$ci.lb`, `r summary.escalc(effect_forty_se)$ci.ub` ] for 40-year-olds, and g = `r  effect_fifty_se$yi `, 95 % CI [ `r summary.escalc(effect_fifty_se)$ci.lb`, `r summary.escalc(effect_fifty_se)$ci.ub` ] for 50-year-olds. 
 
-```{r loo, echo=FALSE}
+```{r lootable, echo=FALSE}
 
 apa_table(leaveoneout
           , escape = TRUE
