@@ -2,7 +2,7 @@
 title: "Extraction of effects and focal tests"
 author: "Lucija Batinovic"
 date: "2021-11-28"
-output: "pdf_document"
+output: "html_document"
 ---
 
 ```{r setup, include=FALSE}
