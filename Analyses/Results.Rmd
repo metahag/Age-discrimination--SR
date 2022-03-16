@@ -272,7 +272,7 @@ all_rma <- rma(yi, vi, data=all_effects_OR, method="REML",
 #set up saving the forest plot to pdf
 pdf("bs_plot.pdf")
 # create a forest plot and set coordinates
-(bs_plot <- forest(all_rma, xlim=c(-16, 8), at=log(c(0.25, 1, 4)), atransf=exp,
+(bs_plot <- forest(all_rma, xlim=c(-16, 8), at=log(c(0.07, 1, 1.5)), atransf=exp,
        ilab=cbind(all_effects_OR$control_no, all_effects_OR$control_yes,
                   all_effects_OR$older_no, all_effects_OR$older_yes, all_effects_OR$rob),
        colout = "coral3",
@@ -280,7 +280,7 @@ pdf("bs_plot.pdf")
        #refline = 2,
        #ylim = plot height (number of rows)
        #ilab.xpos = positioning of frequencies
-       ilab.xpos=c(-7.6,-6,-4,-2.5,3), cex=0.7, 
+       ilab.xpos=c(-8.6,-7,-5,-3.5,3), cex=0.7, 
        ylim=c(-1, 27),
        #order = "obs",
        #in which rows you put data
@@ -306,8 +306,8 @@ op <- par(cex=.75, font=4)
 par(font=2, xpd=NA)
 
 ### add headings to the plot
-text(c(-8.1,-6,-3.75,-1.7), 27, c("Not invited", "Invited", "Not invited", "Invited"))
-text(c(-6.8,-3),        26,                c("Control",                "Older"))
+text(c(-9.1,-7,-4.75,-2.7), 27, c("Not invited", "Invited", "Not invited", "Invited"))
+text(c(-7.8,-4),        26,                c("Control",                "Older"))
 text(-16, 26, "Author(s) and Year",  pos=4)
 text(8, 27, "Odds Ratio", pos=2)
 text(8, 26, "[95% CI]", pos=2)
@@ -349,10 +349,10 @@ ws_rma <- rma(yi, vi, data=effects_ws_cs, method="REML",
               )
 pdf("ws_plot.pdf")
 
-ws_plot <- forest(ws_rma, xlim=c(-16, 9), at=log(c(.25, 1, 4)), atransf=exp,
+ws_plot <- forest(ws_rma, xlim=c(-16, 9), at=log(c(.15, 1, 1.5)), atransf=exp,
        ilab=cbind(effects_ws_cs$control_only, effects_ws_cs$older_only,
                   effects_ws_cs$both, effects_ws_cs$neither, all_ws_cs$rob),
-       ilab.xpos=c(-8,-6.5,-3.5,-2.5,3.3), cex=0.75, ylim=c(2, 10),
+       ilab.xpos=c(-8,-6.5,-4.5,-3.3,3.3), cex=0.75, ylim=c(2, 10),
        colout = "blue3",
        #order = "obs",
        rows=c(7,6.5,4,3.5),
@@ -373,7 +373,7 @@ par(font=2)
 
 ### add column headings to the plot
 text(-6,               9, "Callbacks")
-text(c(-9.2,-6.5,-4,-2.5), 8.5, c("Control only", "Older only", "Both", "Neither"))
+text(c(-9.2,-6.5,-4.3,-2.8), 8.5, c("Control only", "Older only", "Both", "Neither"))
 text(-16,                8.5, "Author(s) and Year",  pos=4)
 #text(-16,                  7, "- Age group",         pos=4)
 text(9,                  8.7, "Odds Ratio", pos=2)
