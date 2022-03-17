@@ -332,8 +332,8 @@ dev.off
 
 ```{r combined forest plot for within-subject studies}
 all_ws_cs <- matrix(c("40-49", 	"Ahmed et al. (2012)", 34, 5, 8, 419, "Moderate",
-                      "40-49", "Capéau et al. (2012)", 31, 5, 26, 129, "Low",
-                      "50-59", "Capéau et al. (2012)", 34, 7, 17, 135, "Low",
+                      "40-49", "Capéau et al. (2012)", 31, 5, 26, 129, "Moderate",
+                      "50-59", "Capéau et al. (2012)", 34, 7, 17, 135, "Moderate",
                       "50-59", "Jansons & Zukov (2012)", 19, 5, 7, 215, "Low"),
                     nrow = 4, ncol = 7, byrow = TRUE) %>% as.data.frame() %>% 
                     mutate_at(c(3:6), as.numeric)
