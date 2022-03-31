@@ -55,6 +55,8 @@ jansons_12 <- data.frame(id = "Jansons & Zukov (2012)",
 #        #create separate column for forty and fifty year olds invited
 #        mutate(forty_yes = if_else(age == 47, older_yes, 0),
 #               fifty_yes = if_else(age == 53, older_yes, 0)) %>% 
+#        mutate(forty_yes = na_if(forty_yes, 0),
+#               fifty_yes = na_if(fifty_yes, 0)) %>% 
 #        #remove age and older_yes columns and add id column
 #        select(-c(age, older_yes)) %>% add_column(id = "Capéau et al. (2012)", .before = TRUE) %>%
 #        write.csv(here("Input", "capeau12.csv"))
