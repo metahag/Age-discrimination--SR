@@ -39,9 +39,9 @@ ahmed_12
 Table 4; p.22 (NOTE:contingency table 3 in appendix shows 26/503 for older applicants)
 Data for for matched-pairs effect size calculations was extracted from Table 4, p.22
 
-Focal tests: (Table 8, p.41): chi2(1)=11.118, p<.001  
+Focal tests: (Table 8, p.41): chi2(1)=11.898, p<.001, age group 50  
 
-R-Index = 0.8307
+R-Index = 0.8636
 
 ```{r echo=FALSE}
 
@@ -55,7 +55,7 @@ jansons_12
 
 ## Carlsson & Eriksson (2019) 
 
-Focal test: (Table 2, p. 177) calculated z-value from coefficient and standard error = `r (-0.0049) / 0.0004`
+Focal test: (Table 2, p. 177) calculated z-value from dividing coefficient and standard error = `r -0.0049 / 0.0004`. We consider it belonging to the 50-year old group as the average for the p-curve analysis.
 Data is extracted from the raw dataset which was provided by the authors. We share the raw frequencies from that dataset and code used to calculate it, but cannot provide the raw dataset itself.
 
 R-Index = 1
@@ -84,9 +84,9 @@ farber_19
 
 ## Neumark et al. (2016) 
 
-Focal test (p.305): callback rates for older applicants (14.7%) were lower than for younger (20.9%), crit. = .10, p = .00
+Focal test (p.307, Table 3): we calculated the z value for callback rates for older applicants applying for jobs in sales, by dividing estimate with the standard error = `r -0.044 / 0.012`, crit. = .10, p < .01
 
-R-Index = 1
+R-Index = 0.9568
 
 
 ```{r echo=FALSE}
@@ -98,15 +98,10 @@ neumark16
 
 ## Neumark et al. (2019)
 
-Focal tests: (Table 4 - p.392): (males(model 1); old 64-66) z-value = -`r 0.064 / 0.006`,
-crit = 0.10 (p < .05)
+Focal tests: (Table 4 - p.392): (males(model 1); old 64-66) z-value = `r -0.064 / 0.006`,
+crit = 0.10 (p < .01)
 
 R-Index = 1
-
-```{r include=FALSE}
-#=.064 was a negative value, but R for some reason does not run it when inside r code chunk so it's outside of r chunk
-```
-
 
 
 ```{r echo=FALSE}
@@ -120,25 +115,33 @@ neumark19_state
 
 This data could not be extracted form summaries in the article and we couldn't get data from the authors.
 
-Experiment 1
+*Experiment 1*
 
-Focal test (Table 4, p.9): p = 0.001 (first p-value presented; pairwise comparison for 56-long-distance vs. 29 year-olds)
+We obtained z values for all focal tests by calculating the standard error from confidence intervals ((upper bound - lower bound) / 3.29) (90%) and dividing the estimate with the SE.
 
-Experiment 2
+Focal test (Table 4, p.9): z = `r -7.00 / ((-3.59 - (-10.41)) / 3.29)`,  p = 0.001 (first p-value presented; pairwise comparison for 56-long-distance vs. 29 year-olds)
 
-Focal test (Table 7 - p.12): IT: 50vs30 - p = .000 (Pairwise comparisons of success rates in job offers between age groups)
+R-Index = 0.8435
 
-Experiment 3
+*Experiment 2*
 
-Focal test (Table 10 - p.15): Men: 50vs30 - p = .001 (Pairwise comparisons of success rates)
+Focal test (Table 7 - p.12): IT: 52vs32 - z = `r -20.53 / ((-16.55 - (-24.51)) / 3.29)`,  p = .000 (Pairwise comparisons of success rates in job offers between age groups)
+
+R-Index = 1
+
+*Experiment 3*
+
+Focal test (Table 10 - p.15): Men: 50vs30 - z = `r -5.77 / ((-2.93 - (-8.61)) / 3.29)`, p = .001 (Pairwise comparisons of success rates)
+
+R-Index = 0.8331
 
 ## Capeau et al. (2012) 
 
 We extracted data from the dataset shared by the author. We provided the frequencies we calculated from that dataset and the code to do it, but we cannot share the raw dataset provided by the author.
 
-Focal test (Table 1, p.14): probit model for age 47, probability to be selected - z score = - `r 0.2337 / 0.1346`, p<.001
+Focal test (Table 1, p.14): chi2 for age group 50 - chi2(1) = 8.0035
 
-R-Index = 0.9999
+R-Index = 0.6152
 
 ```{r}
 
@@ -153,14 +156,9 @@ capeau12
 
 This data could not be extracted from summaries in the article and we couldn't get data from the authors.
 
-Focal tests: (Table 3, p. 38): z-value = -`r 0.065 / 0.011` 
+Focal tests: (Table 3, p. 38): We calculated the z-value for the age group 50 = `r -0.230 / 0.012`, p < .001 
 
-R-Index = 0.9999
-
-```{r include=FALSE}
-#=.065 was a negative value, but R for some reason does not run it when inside r code chunk so it's outside of r chunk
-```
-
+R-Index = 1
 
 ***Between-subject scenario studies***
 
@@ -168,12 +166,12 @@ R-Index = 0.9999
 
 This data could not be extracted form summaries in the article and we couldn't reach the authors.
 
-Focal tests: (Table 2, p.41): (age linear-hire; students) b = -.31, p < 0.05
+Focal tests: (Table 2, p.41): (age linear-hire; organization) b = -.27, p < 0.05 - this is regarded as missing data for the p-curve analysis as we could not calculate the z-value
 
 ## Oesch (2020) 
 
-Focal tests: (Table 1, p.6): (40-year-old, model 1) z-value = `r 0.07 / 0.06`,
-crit = 0.10 (p < 0.1)
+Focal tests: (Table 1, p.6): (55-year-old, model 1) z = `r 0.55 / 0.08`,
+crit = 0.10, p < 0.01
 
 Data was extracted from raw data provided by the author. Note that the author provided necessary code for analyses, but the actual data can be downloaded from: https://forsbase.unil.ch/project/study-public-overview/16840/1/
 
@@ -181,7 +179,7 @@ Variables:
 age of applicants by categories (1=35;2=40;3=45;4=50;5=55)
 mean, sd and n (observations) of likelihood of each age getting hired
 
-R-Index = 0.6325
+R-Index = 1
 
 
 ```{r, echo=FALSE}

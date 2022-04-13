@@ -28,6 +28,7 @@ sessionInfo()
 rmarkdown::pandoc_available()
 
 source(here("Analyses", "extraction_source.R"))
+knitr::opts_chunk$set(options(scipen = 999))
 ```
 
 # Results
@@ -410,7 +411,8 @@ leaveoneout <- bind_rows(loo1, loo2, loo3, loo4)
 
 ## Results of individual studies
 
-\indent We present results of syntheses further in text. Meta-analyses which included more than one study are accompanied with forest plots in the text. Other figures and code are available in the RMarkdown file in the appended materials. All meta-analyses were conducted using the random-effects model with Restricted Maximum Likelihood (REML) tau estimator, as it's the default in the metafor package, but for a robustness check, we conducted the meta-analysis with the commonly used Dersimonian and Laird (1986) tau estimator as well, available in the materials on OSF (link). In general, we found no discrepancies, apart from the meta-analysis of studies on age above sixty-five, where REML method estimated a higher tau value. All summary statistics were calculated using default methods in the metafor package. 
+\indent We present results of syntheses further in text. Meta-analyses which included more than one study are accompanied with forest plots in the text. Other figures and code used to extract data, focal tests, and conduct presented analyses are available in the RMarkdown files in the appended materials. All meta-analyses were conducted using the random-effects model with Restricted Maximum Likelihood (REML) tau estimator, as this is the default in the metafor package, but for a robustness check, we conducted the meta-analysis with the commonly used Dersimonian and Laird (1986) tau estimator as well, available in the analysis files on OSF (https://osf.io/zqxga/). In general, we found no discrepancies, apart from the meta-analysis of studies on age above sixty-five, where the REML method estimated a higher tau2 value. All summary statistics were calculated using default methods in the metafor package.
+
 
 ```{r between-subject forest plots, echo=FALSE}
 
@@ -429,24 +431,25 @@ include_graphics(here("Analyses", "ws_plot.pdf"))
 
 ## Results of syntheses
 
-As mentioned prior, this review intended to conduct four different types of meta-analyses, containing one of four combinations from either correspondence or vignette studies and either in-between or within-subjects design. Due to the availability of our empirical material, we had to omit meta-analyses on scenario-based experiments. The results of the remaining meta-analyses can be seen below. 
+As mentioned previously, we intended to conduct four different types of meta-analyses, containing one of four combinations from either correspondence or vignette studies and either in-between or within-subjects designs. However, due to the availability of our empirical material, we had to omit meta-analyses on scenario-based experiments. The results of the remaining meta-analyses are described below. We present odds ratios with confidence (CI) and prediction intervals (PI), and z and p values.
 
 \indent Age category - Forty \par
-\indent Our first meta-analysis encompassed all within-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis (k=2), the three included studies revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with OR being `r  random_forty_ws_exp$pred ` (95 % CI [ `r random_forty_ws_exp$ci.lb`, `r random_forty_ws_exp$ci.ub` ], 95% PI [ `r random_forty_ws_exp$pi.lb`, `r random_forty_ws_exp$pi.ub` ], z = `r random_forty_ws$zval `, p = `r random_forty_ws$pval`), which means that on average the older applicant had 66% less chance of being hired compared to the control.  Total variance was low (mostly due to a low number of included studies; k=2) tau^2 = `r  random_forty_ws$tau2 `, and the heterogeneity was I^2 = `r  random_forty_ws$I2 `%. 
+\indent Our first meta-analysis encompassed all within-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis (k=2), the three included studies revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with the odds ratio being `r  random_forty_ws_exp$pred ` (95 % CI [ `r random_forty_ws_exp$ci.lb`, `r random_forty_ws_exp$ci.ub` ], 95% PI [ `r random_forty_ws_exp$pi.lb`, `r random_forty_ws_exp$pi.ub` ], z = `r random_forty_ws$zval `, p = `r round(random_forty_ws$pval, digits = 10)`), which means that on average the odds of older applicant being hired compared to the control applicant were `r round(((1 - random_forty_ws_exp$pred) * 100), digits = 2)`% lower. Total variance was low (mostly due to a low number of included studies; k=2) tau^2 = `r  round(exp(random_forty_ws$tau2), digits = 2) ` (SD of the true effects across studies was tau = `r  round(exp(random_forty_ws$tau2), digits = 2)`), and the heterogeneity was I^2 = `r  random_forty_ws$I2 `%.
 
-\indent Our second meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis, the three studies included revealed a significant effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with odds ratio of `r  random_forty_bs_exp$pred ` (95 % CI [ `r random_forty_bs_exp$ci.lb`, `r random_forty_bs_exp$ci.ub` ], 95% PI [ `r random_forty_bs_exp$pi.lb`, `r random_forty_bs_exp$pi.ub` ], z = `r random_forty_bs$zval `, p = `r random_forty_bs$pval`), meaning they had 11% chance less of being hired compared to younger applicants. Tau^2 and I^2 were zero, however heterogeneity of studies is difficult assess with such a small number of included studies (k=3), so this does not imply homogeneity.  
+\indent Our second meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 40 to 49 year old applicants. Via a random-effects meta-analysis, the three studies included revealed a significant effect of applicant age on the hiring decisions held by the participating recruiters against older applicants, with odds ratio of `r  random_forty_bs_exp$pred ` (95 % CI [ `r random_forty_bs_exp$ci.lb`, `r random_forty_bs_exp$ci.ub` ], 95% PI [ `r random_forty_bs_exp$pi.lb`, `r random_forty_bs_exp$pi.ub` ], z = `r random_forty_bs$zval `, p = `r round(random_forty_bs$pval, digits = 10)`), meaning they had `r round(((1 - random_forty_bs_exp$pred) * 100), digits = 2)`% lower odds of being hired compared to younger applicants. Tau^2 and I^2 were zero, however heterogeneity of studies is difficult to assess with such a small number of included studies (k=3), so this does not imply homogeneity.  
 
 \indent Age category - Fifty 
-\indent Our third meta-analysis was set to include all within-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis, the  study on the matter of age discrimination revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants The overall effect was OR = `r  random_fifty_ws_exp$pred ` (95 % CI [ `r random_fifty_ws_exp$ci.lb`, `r random_fifty_ws_exp$ci.ub` ], 95% PI [ `r random_fifty_ws_exp$pi.lb`, `r random_fifty_ws_exp$pi.ub` ], z = `r random_fifty_ws$zval `, p = `r random_fifty_ws$pval`), with 61% lower chance of being hired compared to control. Once again, tau^2 and I^2 values (0; 0% resp.) for such a small sample of studies (k=3) do not provide meaningful assessment of heterogeneity.
+\indent Our third meta-analysis was set to include all within-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis, the  study on the matter of age discrimination revealed an effect of applicant age on the hiring decisions held by the participating recruiters against older applicants The overall effect was OR = `r  random_fifty_ws_exp$pred ` (95 % CI [ `r random_fifty_ws_exp$ci.lb`, `r random_fifty_ws_exp$ci.ub` ], 95% PI [ `r random_fifty_ws_exp$pi.lb`, `r random_fifty_ws_exp$pi.ub` ], z = `r random_fifty_ws$zval `, p = `r round(random_fifty_ws$pval, digits = 10)`), with `r round(((1 - random_fifty_ws_exp$pred) * 100), digits = 2)`% lower odds of being hired compared to control. Once again, tau^2 and I^2 values (`r  round(exp(random_fifty_ws$tau2), digits = 2) `; `r  round(random_fifty_ws$I2, digits = 2)`%, resp.) for such a small sample of studies (k=3) do not provide meaningful assessment of heterogeneity.
 
-\indent Our fourth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis we found that on average older applicants had a 25% lower chance of being invited to an interview/hired than the younger applicant (OR = `r  random_fifty_bs_exp$pred `, 95 % CI [ `r random_fifty_bs_exp$ci.lb`, `r random_fifty_bs_exp$ci.ub` ], 95% PI [ `r random_fifty_bs_exp$pi.lb`, `r random_fifty_bs_exp$pi.ub` ], z = `r random_fifty_bs$zval `, p = `r random_fifty_bs$pval`). 
+\indent Our fourth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 50 to 59 year old applicants. Via a random-effects meta-analysis we found that on average older applicants had a `r round(((1 - random_fifty_bs_exp$pred) * 100), digits = 2)`% lower odds of being invited to an interview/hired than the younger applicant (OR = `r  random_fifty_bs_exp$pred `, 95 % CI [ `r random_fifty_bs_exp$ci.lb`, `r random_fifty_bs_exp$ci.ub` ], 95% PI [ `r random_fifty_bs_exp$pi.lb`, `r random_fifty_bs_exp$pi.ub` ], z = `r random_fifty_bs$zval `, p = `r round(random_fifty_bs$pval, digits = 10)`). As in the former analysis, heterogeneity was not found (tau2 = `r  round(exp(random_fifty_bs$tau2), digits = 2) `; I2 = `r  random_fifty_bs$I2 `%). 
+
 
 \indent Age category - Sixty
-\indent Our fifth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 60 to 65 year old applicants. Via a random-effects meta-analysis, we found on average that older applicants have a 39% lower chance of getting hired campared to younger applicants (OR = `r  random_sixty_bs_exp$pred `, 95 % CI [ `r random_sixty_bs_exp$ci.lb`, `r random_sixty_bs_exp$ci.ub` ], 95% PI [ `r random_sixty_bs_exp$pi.lb`, `r random_sixty_bs_exp$pi.ub` ], z = `r random_sixty_bs$zval `, p = `r random_sixty_bs$pval`). Total variance was low (tau^2 = `r  random_sixty_bs$tau2 `), with 75% of it being heterogeneity of true effects (I^2 = `r  random_sixty_bs$I2 `). 
+\indent Our fifth meta-analysis was set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and 60 to 65 year old applicants. Via a random-effects meta-analysis, we found on average that older applicants have a `r round(((1 - random_sixty_bs_exp$pred) * 100), digits = 2)`% lower odds of getting hired campared to younger applicants (OR = `r  random_sixty_bs_exp$pred `, 95 % CI [ `r random_sixty_bs_exp$ci.lb`, `r random_sixty_bs_exp$ci.ub` ], 95% PI [ `r random_sixty_bs_exp$pi.lb`, `r random_sixty_bs_exp$pi.ub` ], z = `r random_sixty_bs$zval `, p = `r round(random_sixty_bs$pval, digits = 10)`). Total variance was low (tau^2 = `r  exp(random_sixty_bs$tau2) `, with the SD of the true effects across studies, tau = `r  round(exp(random_sixty_bs$tau2), digits = 2)`), with `r round(random_sixty_bs$I2, digits = 0) `% of it being heterogeneity of true effects (I^2 = `r  random_sixty_bs$I2 `). 
 
 
 \indent Age category - Over Sixtyfive
-\indent The final meta-analysis set to include all between-subject correspondence studies measuring the hiring disparities between our comparator group and applicants over 65 years of age. Via a random-effects meta-analysis, we found that on average, older applicants have a 50% lower chance of being hired compared to control (OR = `r  random_above_sixtyfive_bs_exp$pred `, 95 % CI [ `r random_above_sixtyfive_bs_exp$ci.lb`, `r random_above_sixtyfive_bs_exp$ci.ub` ], 95% PI [ `r random_above_sixtyfive_bs_exp$pi.lb`, `r random_above_sixtyfive_bs_exp$pi.ub` ], z = `r random_above_sixtyfive_bs$zval `, p = `r random_above_sixtyfive_bs$pval`). Total variance was relatively low (tau^2 = `r  random_above_sixtyfive_bs$tau2 `), with effect heterogeneity accounting for mostly all of that variance (I^2 = `r  random_above_sixtyfive_bs$I2 `). 
+\indent The final meta-analysis included all between-subject correspondence studies measuring the hiring disparities between our comparator group and applicants over 65 years of age. Via a random-effects meta-analysis, we found that on average, older applicants have a `r round(((1 - random_above_sixtyfive_bs_exp$pred) * 100), digits = 2)`% lower odds of being hired compared to control (OR = `r  random_above_sixtyfive_bs_exp$pred `, 95 % CI [ `r random_above_sixtyfive_bs_exp$ci.lb`, `r random_above_sixtyfive_bs_exp$ci.ub` ], 95% PI [ `r random_above_sixtyfive_bs_exp$pi.lb`, `r random_above_sixtyfive_bs_exp$pi.ub` ], z = `r random_above_sixtyfive_bs$zval `, p = `r round(random_above_sixtyfive_bs$pval, digits = 10)`). Total variance was relatively low (tau^2 = `r  random_above_sixtyfive_bs$tau2 ` and the SD of the true effects across studies, tau = `r  round(exp(random_above_sixtyfive_bs$tau2), digits = 2)`), with effect heterogeneity accounting for mostly all of that variance (I^2 = `r  random_above_sixtyfive_bs$I2 `). 
 
 
 Finally, for the one scenario experiment study we obtained data from (Oesch, 2012) we calculated a Hedge's g effect size of g = `r  effect_forty_se$yi `, 95 % CI [ `r summary.escalc(effect_forty_se)$ci.lb`, `r summary.escalc(effect_forty_se)$ci.ub` ] for 40-year-olds, and g = `r  effect_fifty_se$yi `, 95 % CI [ `r summary.escalc(effect_fifty_se)$ci.lb`, `r summary.escalc(effect_fifty_se)$ci.ub` ] for 50-year-olds. 
@@ -464,10 +467,48 @@ apa_table(leaveoneout
 
 ```
 
-We conducted a leave-one-out sensitivity analysis and found that leaving out the Carlsson & Eriksson (2019) study substantially increased average effects of age discrimination (Table 4). This can be explained by the large confidence interval in that study (Figure x) which means a higher uncertainty of the true average effect. 
+We conducted a leave-one-out sensitivity analysis and found that leaving out the Carlsson & Eriksson (2019) study substantially decreased average effects of age discrimination (Supplemental Table 2). This can be explained by the fact that their study design differed from other studies in terms of age range included.
 
 
+## Reporting biases
 
+Figure 4
+
+```{r}
+
+knitr::include_graphics(here("Input", "p-curve-age.png"))
+
+```
+
+\indent Here we present the p-curve and the p-checker results. We found an R-index of 0.91 for the correspondence studies, which implies extremely high power. For the scenario experiments we found an R-index of 1 with 100% success rate. We included studies that we could extract focal tests from and that were reported as significant in the papers. Funnel plots have been conducted to visually assess potential asymmetry in published effects and are available in the RMarkdown files (https://osf.io/zqxga/), however, as we had a small number of studies per analysis, it is hard to assess asymmetry or potential publication bias with few data points. \par
+
+\indent The p-curve shows a strong right skew with more studies having lower p-values, which is consistent with highly powered studies and little publication bias. Taken together, there is little indication of publication bias in this literature.
+
+```{r}
+# correspondence studies
+
+## Success rate = 1
+## Median observed power = 0.9551
+## Inflation rate = 0.0449
+## R-Index = 0.9102
+
+# scenario experiments
+
+## Success rate = 1
+## Median observed power = 1
+## Inflation rate = 0
+## R-Index = 1
+
+# overall
+## Success rate = 1
+## Median observed power = 0.9876
+## Inflation rate = 0.0124
+## R-Index = 0.9752
+```
+
+## Certainty of evidence
+
+\indent Based on the aforementioned risk of bias assessments, the funnel plots presented below and the p-curve (Figure 4; Results.Rmd at https://osf.io/zqxga/), we conclude to find a moderate certainty of evidence. In general we find narrow confidence intervals (Figure 2; Figure 3) and prediction intervals, meaning our average true effect and the deviation of found effects show good precision of evidence. Furthermore, we conducted the leave-one-out sensitivity analyses (available in supplemented materials) of the effect size aggregates for between-subject studies examining age discrimination of 50- and 60-year-old applicants. These analyses show robust findings generally, with the only exception being the removal of Carlsson and Eriksson (2019), which somewhat increases the effect size and tau. Presumably, the Carlsson and Eriksson (2019) study introduces higher deviation in effects because of the continuous age variable. We tried to account for publication bias by including grey literature, however, it is difficult to assess based on the low number of studies included in the analyses. Following the GRADE guidelines (Higgins et al., 2021), this implies that we are moderately confident in the certainty of our evidence, but we acknowledge the possibility that we did not capture the true effect.
 
 
 
