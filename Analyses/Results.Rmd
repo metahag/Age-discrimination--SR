@@ -307,8 +307,8 @@ op <- par(cex=.75, font=4)
 par(font=2, xpd=NA)
 
 ### add headings to the plot
-text(c(-9.1,-7,-4.75,-2.7), 27, c("Not invited", "Invited", "Not invited", "Invited"))
-text(c(-7.8,-4),        26,                c("Control",                "Older"))
+text(c(-7.8,-4),        27,                c("Control",                "Older"))
+text(c(-9.1,-7,-4.75,-2.7), 26, c("Not invited", "Invited", "Not invited", "Invited"))
 text(-16, 26, "Author(s) and Year",  pos=4)
 text(8, 27, "Odds Ratio", pos=2)
 text(8, 26, "[95% CI]", pos=2)
